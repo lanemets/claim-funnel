@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package profile;
+option go_package = "github.com/lanemets/claim-funnel/profile";
+
+message NotifyBeneficiaryRequest {
+  string claimId = 1;
+}
+
+message NotifyBeneficiaryResponse {
+}
+
+message ConfirmClaimRequest {
+  string claimId = 1;
+}
+
+message ConfirmClaimResponse {
+}
+
+service ClaimService {
+
+  rpc NotifyBeneficiary (NotifyBeneficiaryRequest) returns (NotifyBeneficiaryResponse) {
+  }
+
+  rpc ConfirmClaim (ConfirmClaimRequest) returns (ConfirmClaimResponse) {
+  }
+}

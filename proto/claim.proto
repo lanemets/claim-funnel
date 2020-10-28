@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package claim;
+option go_package = "github.com/lanemets/claim-funnel/claim";
+
+message Claim {
+
+  string email = 5;
+  string amount = 2;
+  string currencyCode = 3;
+  string clientReferenceNumber = 4;
+  string description = 6;
+
+  enum StatusType {
+    UNKNOWN = 0;
+    CLAIM_CREATED = 1;
+    CLAIM_ACKNOWLEDGED = 2;
+    CLAIM_CANCELLED = 3;
+    CLAIM_EXPIRED = 4;
+    PAYMENT_IN_PROGRESS = 5;
+    PAYMENT_REJECTED = 6;
+    PAYMENT_FAILED = 7;
+    CLAIMED = 8;
+    CLAIM_PAID = 9;
+  }
+
+  StatusType status = 7;
+  string createdOn = 8;
+  string expiresOn = 9;
+}
+
+message CreateClaimRequest {
+
+  Claim claim = 1;
+
+  Profile profile = 2;
+}
+
+message CreateClaimResponse {
+  string id = 1;
+}
+
+message Address {
+
+  string id = 1;
+
+  enum AddressType {
+    RESIDENTIAL = 0;
+    COMMERCIAL = 1;
+  }
+
+  AddressType addressType = 2;
+
+  string line1 = 4;
+  string line2 = 5;
+  string city = 6;
+  string state = 7;
+  string postalCode = 8;
+  string countryCode = 9;
+}
+
+message Company {
+  string id = 1;
+
+  enum CompanyType {
+    UNKNOWN = 0;
+    CORPORATION = 1;
+    PARTNERSHIP = 2;
+    GOVERNMENT = 3;
+    NONPROFIT = 4;
+    PUBLIC_COMPANY = 5;
+    PRIVATE_COMPANY = 6;
+  }
+
+  CompanyType businessType = 3;
+
+  string name = 4;
+
+  string tin = 5;
+}
+
+message Person {
+
+  string firstName = 5;
+  string middleName = 6;
+  string lastName = 7;
+  string dob = 9;
+  string ein = 10;
+}
+
+message Phone {
+
+  string id = 1;
+
+  enum PhoneType {
+    HOME = 0;
+    CELL = 1;
+    WORK = 2;
+    OTHER = 3;
+  }
+
+  PhoneType phoneType = 2;
+  string countryCode = 4;
+  string number = 5;
+  string ext = 6;
+}
+
+message Profile {
+
+  string externalId = 8;
+
+  enum ProfileType {
+    PERSON = 0;
+    COMPANY = 1;
+  }
+
+  ProfileType profileType = 2;
+
+  oneof entity {
+    Person person = 3;
+    Company company = 4;
+  }
+
+  Address address = 6;
+  Phone phone = 7;
+}
+
+service ClaimService {
+
+  rpc CreateClaim (CreateClaimRequest) returns (CreateClaimResponse) {
+  }
+}
