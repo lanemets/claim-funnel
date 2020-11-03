@@ -11,6 +11,10 @@ message Claim {
   string clientReferenceNumber = 4;
   string description = 6;
 
+  StatusType status = 7;
+  string createdOn = 8;
+  string expiresOn = 9;
+
   enum StatusType {
     UNKNOWN = 0;
     CLAIM_CREATED = 1;
@@ -23,10 +27,6 @@ message Claim {
     CLAIMED = 8;
     CLAIM_PAID = 9;
   }
-
-  StatusType status = 7;
-  string createdOn = 8;
-  string expiresOn = 9;
 }
 
 message CreateClaimRequest {
@@ -125,8 +125,25 @@ message Profile {
   Phone phone = 7;
 }
 
+message GetClaimRequest {
+  string id = 1;
+}
+
+message GetClaimResponse {
+  ClaimInfo data = 1;
+}
+
+message ClaimInfo {
+  string id = 1;
+  string email = 2;
+  Claim.StatusType status = 3;
+}
+
 service ClaimService {
 
   rpc CreateClaim (CreateClaimRequest) returns (CreateClaimResponse) {
+  }
+
+  rpc GetClaim (GetClaimRequest) returns (GetClaimResponse) {
   }
 }

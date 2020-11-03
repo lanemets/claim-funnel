@@ -5,7 +5,8 @@ import (
 	"fmt"
 	camunda "github.com/citilinkru/camunda-client-go"
 	"github.com/citilinkru/camunda-client-go/processor"
-	"github.com/lanemets/claim-funnel/task"
+	"github.com/lanemets/claim-funnel/config"
+	"github.com/lanemets/claim-funnel/handler"
 	"log"
 	"os"
 	"time"
@@ -15,41 +16,34 @@ type Camunda struct {
 	client *camunda.Client
 }
 
-type Credentials struct {
-	endpointUrl string
-	user        string
-	password    string
-}
-
 type WorkerId struct {
 	value string
 }
 
-type ProcessDefinitionId struct {
-	value string
-}
-
-func NewCamundaClient(credentials Credentials) BpmClient {
-	c := camunda.NewClient(
+func NewCamundaClient(credentials *config.BpmCredentials) BpmClient {
+	client := camunda.NewClient(
 		camunda.ClientOptions{
-			EndpointUrl: credentials.endpointUrl,
-			ApiUser:     credentials.user,
-			ApiPassword: credentials.password,
+			EndpointUrl: credentials.EndpointUrl,
+			ApiUser:     credentials.User,
+			ApiPassword: credentials.Password,
 			Timeout:     time.Second * 10,
 		},
 	)
 
 	return Camunda{
-		client: c,
+		client: client,
 	}
 }
 
-//TODO: configure explicitly from external source
-func configureExternalHandlers(p *processor.Processor, workerConfig *WorkerConfig, consumer task.Consumer) {
+func (c Camunda) configureExternalHandler(
+	p *processor.Processor,
+	workerConfig *config.Worker,
+	handler handler.ServiceHandler,
+) {
 	p.AddHandler(
 		&[]camunda.QueryFetchAndLockTopic{
 			{
-				TopicName: workerConfig.topicName,
+				TopicName: handler.Topic,
 			},
 		},
 		func(ctx *processor.Context) error {
@@ -61,13 +55,41 @@ func configureExternalHandlers(p *processor.Processor, workerConfig *WorkerConfi
 				ctx.Task.BusinessKey,
 			)
 
-			_ = consumer(ctx.Task.BusinessKey)
+			log.Printf("Topic: %v", ctx.Task.TopicName)
+			log.Printf("Process Instance Id: %v", ctx.Task.ProcessInstanceId)
+			log.Printf("Process Definition Id: %v", ctx.Task.ProcessDefinitionId)
 
-			err := ctx.Complete(
-				processor.QueryComplete{
-					Variables: &map[string]camunda.Variable{
-						"result": {Value: "Hello world!", Type: "string"},
+			variablesToAdd, err := handler.Handler(variables(ctx.Task.Variables), ctx.Task.BusinessKey)
+
+			log.Printf("Variables to add to process: %v", variablesToAdd)
+
+			if err != nil {
+				errTxt := fmt.Sprintf(
+					"an error occurred in executor; taskId: %s, businessKey: %s, error: %s",
+					ctx.Task.Id,
+					ctx.Task.BusinessKey,
+					err,
+				)
+
+				log.Printf(errTxt)
+
+				return ctx.HandleFailure(
+					processor.QueryHandleFailure{
+						ErrorMessage: &errTxt,
+						Retries:      &workerConfig.Retries,
+						RetryTimeout: &workerConfig.RetryTimeoutMillis,
 					},
+				)
+			}
+
+			log.Printf("Task variables: %v", ctx.Task.Variables)
+
+			variables := camundaVariables(variablesToAdd)
+			log.Printf("Variables to set: %v", variables)
+
+			err = ctx.Complete(
+				processor.QueryComplete{
+					Variables: &variables,
 				},
 			)
 			if err != nil {
@@ -83,8 +105,8 @@ func configureExternalHandlers(p *processor.Processor, workerConfig *WorkerConfi
 				return ctx.HandleFailure(
 					processor.QueryHandleFailure{
 						ErrorMessage: &errTxt,
-						Retries:      &workerConfig.retries,
-						RetryTimeout: &workerConfig.retryTimeout,
+						Retries:      &workerConfig.Retries,
+						RetryTimeout: &workerConfig.RetryTimeoutMillis,
 					},
 				)
 			}
@@ -99,23 +121,63 @@ func configureExternalHandlers(p *processor.Processor, workerConfig *WorkerConfi
 	)
 }
 
-//TODO: move to separate goroutine/service
-func (client Camunda) startExternalTaskWorker(config *WorkerConfig, consumer task.Consumer) error {
+func camundaVariables(attributes map[string]interface{}) map[string]camunda.Variable {
+	instanceOf := func(i interface{}) string {
+		switch t := i.(type) {
+		case bool:
+			return "boolean"
+		case string:
+			return "string"
+		default:
+			errorText := fmt.Sprintf("Don't know type %T\n", t)
+			log.Fatalf(errorText)
+			//TODO: remove
+			return ""
+		}
+	}
 
+	variables := make(map[string]camunda.Variable)
+
+	for name, value := range attributes {
+		kind := instanceOf(value)
+
+		variables[name] = camunda.Variable{
+			Value: value,
+			Type:  kind,
+		}
+	}
+
+	return variables
+}
+
+func variables(variables map[string]camunda.Variable) map[string]string {
+	attributes := make(map[string]string)
+
+	for name, value := range variables {
+		attributes[name] = fmt.Sprintf("%v", value)
+	}
+
+	return attributes
+}
+
+func (c Camunda) registerExternalTaskWorker(
+	workerConfig *config.Worker,
+	handler handler.ServiceHandler,
+) error {
 	//TODO: multiple workers with different ids
-	p := createProcessor(client.client, "claim-process-worker-id")
-	configureExternalHandlers(p, config, consumer)
+	proc := createProcessor(c.client, workerConfig, handler.WorkerId)
+	c.configureExternalHandler(proc, workerConfig, handler)
 
 	return nil
 }
 
-func (client Camunda) deployProcess(path string) error {
+func (c Camunda) deployProcess(path string) error {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Printf("Error read file: %s\n", err)
 		return errors.New("error read file")
 	}
-	result, err := client.client.Deployment.Create(
+	result, err := c.client.Deployment.Create(
 		camunda.ReqDeploymentCreate{
 			DeploymentName: "DemoProcess",
 			Resources: map[string]interface{}{
@@ -132,8 +194,8 @@ func (client Camunda) deployProcess(path string) error {
 	return nil
 }
 
-func (client Camunda) startProcessInstance(processKey string, businessKey string) (error, *ProcessDefinitionId) {
-	result, err := client.client.ProcessDefinition.StartInstance(
+func (c Camunda) startProcessInstance(processKey string, businessKey string) (error, *ProcessDefinitionId) {
+	result, err := c.client.ProcessDefinition.StartInstance(
 		camunda.QueryProcessDefinitionBy{Key: &processKey},
 		camunda.ReqStartInstance{
 			//TODO add variables
@@ -156,51 +218,55 @@ func (client Camunda) startProcessInstance(processKey string, businessKey string
 	return nil, &ProcessDefinitionId{value: result.DefinitionId}
 }
 
-func (client Camunda) completeUserTask(businessKey string, processDefinitionId *ProcessDefinitionId) error {
+func (c Camunda) completeUserTask(businessKey string, taskId string, processDefinitionId *ProcessDefinitionId) error {
+	//TODO: check for multiple process instances
+	//TODO: retrieve task by query by id
 	query := &camunda.UserTaskGetListQuery{
 		ProcessInstanceBusinessKey: businessKey,
 		ProcessDefinitionId:        processDefinitionId.value,
+		TaskDefinitionKey:          taskId,
 	}
 
-	tasks, err := client.client.UserTask.GetList(query)
+	tasks, err := c.client.UserTask.GetList(query)
 	if err != nil {
 		msg := fmt.Sprintf("unable to get user tasks; businessKey: %s, error: %s", businessKey, err)
 		log.Println(msg)
 		return errors.New(msg)
 	}
 
-	 if len(tasks) == 0 {
-		 msg := fmt.Sprintf("no user task found; businessKey: %s, error: %s", businessKey, err)
-		 log.Println(msg)
-		 return errors.New(msg)
-	 }
+	if len(tasks) == 0 {
+		msg := fmt.Sprintf("no user task found; businessKey: %s, error: %s", businessKey, err)
+		log.Println(msg)
+		return errors.New(msg)
+	}
 
 	for _, t := range tasks {
 		err := t.Complete(camunda.QueryUserTaskComplete{})
+		//TODO: repeat? do not fail?
 		if err != nil {
 			//TODO: get rid of duplicate
-			msg := fmt.Sprintf("unable to complete user task; businessKey: %s, error: %s", businessKey, err)
+			msg := fmt.Sprintf(
+				"unable to complete user task; businessKey: %s, taskId: %s, error: %s",
+				businessKey,
+				taskId,
+				err,
+			)
 			log.Println(msg)
-			return errors.New(msg)
 		}
 	}
-
-
 
 	return nil
 }
 
-func createProcessor(client *camunda.Client, workerId string) *processor.Processor {
-	//TODO: multiple workers?
+func createProcessor(client *camunda.Client, config *config.Worker, workerId string) *processor.Processor {
 	return processor.NewProcessor(
 		client,
 		&processor.ProcessorOptions{
-			//TODO; to config
 			WorkerId:                  workerId,
-			LockDuration:              time.Second * 5,
-			MaxTasks:                  10,
-			MaxParallelTaskPerHandler: 100,
-			LongPollingTimeout:        time.Minute,
+			LockDuration:              config.LockDuration,
+			MaxTasks:                  config.MaxTasks,
+			MaxParallelTaskPerHandler: config.MaxParallelTaskPerHandler,
+			LongPollingTimeout:        config.LongPollingTimeout,
 		},
 		func(err error) {
 			log.Println(err.Error())

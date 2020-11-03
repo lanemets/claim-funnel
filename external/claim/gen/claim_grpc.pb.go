@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ClaimServiceClient interface {
 	CreateClaim(ctx context.Context, in *CreateClaimRequest, opts ...grpc.CallOption) (*CreateClaimResponse, error)
+	GetClaim(ctx context.Context, in *GetClaimRequest, opts ...grpc.CallOption) (*GetClaimResponse, error)
 }
 
 type claimServiceClient struct {
@@ -37,11 +38,21 @@ func (c *claimServiceClient) CreateClaim(ctx context.Context, in *CreateClaimReq
 	return out, nil
 }
 
+func (c *claimServiceClient) GetClaim(ctx context.Context, in *GetClaimRequest, opts ...grpc.CallOption) (*GetClaimResponse, error) {
+	out := new(GetClaimResponse)
+	err := c.cc.Invoke(ctx, "/claim.ClaimService/GetClaim", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ClaimServiceServer is the server API for ClaimService service.
 // All implementations must embed UnimplementedClaimServiceServer
 // for forward compatibility
 type ClaimServiceServer interface {
 	CreateClaim(context.Context, *CreateClaimRequest) (*CreateClaimResponse, error)
+	GetClaim(context.Context, *GetClaimRequest) (*GetClaimResponse, error)
 	mustEmbedUnimplementedClaimServiceServer()
 }
 
@@ -51,6 +62,9 @@ type UnimplementedClaimServiceServer struct {
 
 func (UnimplementedClaimServiceServer) CreateClaim(context.Context, *CreateClaimRequest) (*CreateClaimResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateClaim not implemented")
+}
+func (UnimplementedClaimServiceServer) GetClaim(context.Context, *GetClaimRequest) (*GetClaimResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClaim not implemented")
 }
 func (UnimplementedClaimServiceServer) mustEmbedUnimplementedClaimServiceServer() {}
 
@@ -83,6 +97,24 @@ func _ClaimService_CreateClaim_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ClaimService_GetClaim_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetClaimRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClaimServiceServer).GetClaim(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/claim.ClaimService/GetClaim",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClaimServiceServer).GetClaim(ctx, req.(*GetClaimRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _ClaimService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "claim.ClaimService",
 	HandlerType: (*ClaimServiceServer)(nil),
@@ -90,6 +122,10 @@ var _ClaimService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateClaim",
 			Handler:    _ClaimService_CreateClaim_Handler,
+		},
+		{
+			MethodName: "GetClaim",
+			Handler:    _ClaimService_GetClaim_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

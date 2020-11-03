@@ -2,7 +2,6 @@ package claim
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"log"
 	"time"
@@ -14,18 +13,18 @@ const (
 	address = "localhost:9002"
 )
 
-type Id struct {
+type ClaimId struct {
 	Value string
 }
 
-type Claim struct {
+type Client struct {
 }
 
-func Client() *Claim {
-	return &Claim{}
+func NewClient() *Client {
+	return &Client{}
 }
 
-func (claim Claim) Create() Id {
+func (claim Client) Create(request *cb.CreateClaimRequest) *ClaimId {
 	//TODO pool connections ?
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -36,27 +35,6 @@ func (claim Claim) Create() Id {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	//TODO move to params
-	request := &cb.CreateClaimRequest{
-		Claim: &cb.Claim{
-			Email:                 "lanemets.vv+0m7@gmail.com",
-			Amount:                "100.0",
-			CurrencyCode:          "USD",
-			ClientReferenceNumber: uuid.New().String(),
-			Description: "Test",
-		},
-		Profile: &cb.Profile{
-			ExternalId:  "0",
-			ProfileType: 0,
-			Entity: &cb.Profile_Person{
-				Person: &cb.Person{
-					FirstName: "TestFirst0",
-					LastName:  "TestLast0",
-				},
-			},
-		},
-	}
-
 	client := cb.NewClaimServiceClient(conn)
 	claimId, err := client.CreateClaim(ctx, request)
 	if err != nil {
@@ -65,5 +43,5 @@ func (claim Claim) Create() Id {
 
 	log.Printf("claim has been created successfully; claimId: %v", claimId)
 
-	return Id{Value: claimId.Id}
+	return &ClaimId{Value: claimId.Id}
 }

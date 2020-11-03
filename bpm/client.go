@@ -1,65 +1,59 @@
 package bpm
 
 import (
+	"github.com/lanemets/claim-funnel/config"
 	"github.com/lanemets/claim-funnel/external/claim"
-	"github.com/lanemets/claim-funnel/task"
+	"github.com/lanemets/claim-funnel/handler"
 	"log"
 	"path/filepath"
 )
 
-const (
-	ClaimProcessKey            = "claim-process"
-	NotifyBeneficiaryTopicName = "notify-beneficiary"
-	ClaimConfirmTaskId         = "claim-confirm"
-)
+type Client struct {
+	client BpmClient
+}
 
-type WorkerConfig struct {
-	topicName    string
-	retries      int
-	retryTimeout int
+type ProcessDefinitionId struct {
+	value string
 }
 
 type BpmClient interface {
 	deployProcess(path string) error
 	startProcessInstance(processKey string, businessKey string) (error, *ProcessDefinitionId)
-	startExternalTaskWorker(config *WorkerConfig, consumer task.Consumer) error
-	completeUserTask(businessKey string, processDefinitionId *ProcessDefinitionId) error
+
+	registerExternalTaskWorker(
+		workerConfig *config.Worker,
+		serviceHandler handler.ServiceHandler,
+	) error
+
+	completeUserTask(businessKey string, taskId string, processDefinitionId *ProcessDefinitionId) error
 }
 
-type ClaimBpmClient struct {
-	bpmClient BpmClient
+type Credentials struct {
+	endpointUrl string
+	user        string
+	password    string
 }
 
-type Result struct {
-	processId string
-}
-
-func NewClaimBpmClient() *ClaimBpmClient {
-	return &ClaimBpmClient{
-		bpmClient: NewCamundaClient(
-			Credentials{
-				endpointUrl: "http://localhost:8080/engine-rest",
-				user:        "demo",
-				password:    "demo",
-			},
-		),
+func NewClient(config *config.BpmClient) *Client {
+	return &Client{
+		client: NewCamundaClient(config.Credentials),
 	}
 }
 
-func (client ClaimBpmClient) DeployClaimProcess() {
-	absPath, pathErr := filepath.Abs("bpm/resources/claim-process.bpmn")
+func (client Client) DeployProcess(processConfig *config.BpmProcess) {
+	absPath, pathErr := filepath.Abs(processConfig.FilePath)
 	if pathErr != nil {
 		log.Fatalf("unable to find process file, error: %v", pathErr)
 	}
 
-	err := client.bpmClient.deployProcess(absPath)
+	err := client.client.deployProcess(absPath)
 	if err != nil {
 		log.Fatalf("unable to deploy claim process, error: %v", err)
 	}
 }
 
-func (client ClaimBpmClient) StartClaimProcessInstance(claimId claim.Id) *ProcessDefinitionId {
-	err, processDefinitionId := client.bpmClient.startProcessInstance(ClaimProcessKey, claimId.Value)
+func (client Client) StartProcessInstance(claimId *claim.ClaimId) *ProcessDefinitionId {
+	err, processDefinitionId := client.client.startProcessInstance(config.ClaimProcessKey, claimId.Value)
 	if err != nil {
 		log.Fatalf("unable to start claim process instance; claimId: %s, error: %s", claimId.Value, err)
 	}
@@ -67,18 +61,16 @@ func (client ClaimBpmClient) StartClaimProcessInstance(claimId claim.Id) *Proces
 	return processDefinitionId
 }
 
-func (client ClaimBpmClient) StartBeneficiariesNotification(consumer task.Consumer) {
-	config := &WorkerConfig{
-		topicName:    NotifyBeneficiaryTopicName,
-		retries:      5,
-		retryTimeout: 5_000,
+func (client Client) RegisterServiceHandlers(workerConfig *config.Worker, handlers ...handler.ServiceHandler) {
+	for _, h := range handlers {
+		_ = client.client.registerExternalTaskWorker(workerConfig, h)
 	}
-	_ = client.bpmClient.startExternalTaskWorker(config, consumer)
 }
 
-func (client ClaimBpmClient) CompleteClaimConfirmTask(claimId claim.Id, processDefinitionId *ProcessDefinitionId) {
-	err := client.bpmClient.completeUserTask(
+func (client Client) CompleteClaimConfirmTask(claimId *claim.ClaimId, processDefinitionId *ProcessDefinitionId) {
+	err := client.client.completeUserTask(
 		claimId.Value,
+		"claim-confirm",
 		processDefinitionId,
 	)
 	if err != nil {

@@ -5,6 +5,9 @@ option go_package = "github.com/lanemets/claim-funnel/profile";
 
 message NotifyBeneficiaryRequest {
   string claimId = 1;
+
+  //TODO: get rid of this
+  bool existingUser = 2;
 }
 
 message NotifyBeneficiaryResponse {
@@ -17,11 +20,57 @@ message ConfirmClaimRequest {
 message ConfirmClaimResponse {
 }
 
+message AcknowledgeClaimRequest {
+  string claimId = 1;
+  string profileId = 2;
+}
+
+message AcknowledgeClaimResponse {
+}
+
+message SetPaymentPendingRequest {
+  string claimId = 1;
+}
+
+message SetPaymentPendingResponse {
+}
+
+//TODO Move to Claim Service
 service ClaimService {
 
   rpc NotifyBeneficiary (NotifyBeneficiaryRequest) returns (NotifyBeneficiaryResponse) {
   }
 
   rpc ConfirmClaim (ConfirmClaimRequest) returns (ConfirmClaimResponse) {
+  }
+
+  rpc SetPaymentPending (SetPaymentPendingRequest) returns (SetPaymentPendingResponse) {
+  }
+
+  rpc AcknowledgeClaim (AcknowledgeClaimRequest) returns (AcknowledgeClaimResponse) {
+  }
+}
+
+message GetProfileByEmailRequest {
+  string email = 1;
+}
+
+message ProfileExists {
+  string profileId = 1;
+}
+
+message ProfileNotFound {}
+
+message GetProfileByEmailResponse {
+
+  oneof response {
+    ProfileExists exists = 1;
+    ProfileNotFound notFound = 2;
+  }
+}
+
+service ProfilesService {
+
+  rpc GetProfileByEmail (GetProfileByEmailRequest) returns (GetProfileByEmailResponse) {
   }
 }
