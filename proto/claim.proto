@@ -139,6 +139,38 @@ message ClaimInfo {
   Claim.StatusType status = 3;
 }
 
+message NotifyBeneficiaryRequest {
+  string claimId = 1;
+
+  //TODO: get rid of this
+  bool existingUser = 2;
+}
+
+message NotifyBeneficiaryResponse {
+}
+
+message ConfirmClaimRequest {
+  string claimId = 1;
+}
+
+message ConfirmClaimResponse {
+}
+
+message AcknowledgeClaimRequest {
+  string claimId = 1;
+  string profileId = 2;
+}
+
+message AcknowledgeClaimResponse {
+}
+
+message SetPaymentPendingRequest {
+  string claimId = 1;
+}
+
+message SetPaymentPendingResponse {
+}
+
 service ClaimService {
 
   rpc CreateClaim (CreateClaimRequest) returns (CreateClaimResponse) {
@@ -146,4 +178,17 @@ service ClaimService {
 
   rpc GetClaim (GetClaimRequest) returns (GetClaimResponse) {
   }
+
+  rpc NotifyBeneficiary (NotifyBeneficiaryRequest) returns (NotifyBeneficiaryResponse) {
+  }
+
+  rpc ConfirmClaim (ConfirmClaimRequest) returns (ConfirmClaimResponse) {
+  }
+
+  rpc SetPaymentPending (SetPaymentPendingRequest) returns (SetPaymentPendingResponse) {
+  }
+
+  rpc AcknowledgeClaim (AcknowledgeClaimRequest) returns (AcknowledgeClaimResponse) {
+  }
+
 }

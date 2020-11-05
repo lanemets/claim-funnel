@@ -35,8 +35,8 @@ func NotifyBeneficiary(address string) Handler {
 
 		log.Printf("Notifying Beneficiary; claimId: %v, profileId: %v", claimId, profileId)
 
-		client := p.NewClaimServiceClient(conn)
-		req := &p.NotifyBeneficiaryRequest{ClaimId: claimId, ExistingUser: exists}
+		client := c.NewClaimServiceClient(conn)
+		req := &c.NotifyBeneficiaryRequest{ClaimId: claimId, ExistingUser: exists}
 
 		_, err = client.NotifyBeneficiary(ctx, req)
 
@@ -62,11 +62,11 @@ func SetPaymentPending(address string) Handler {
 		defer cancel()
 
 		claimId := businessKey
-		request := &p.SetPaymentPendingRequest{ClaimId: claimId}
+		request := &c.SetPaymentPendingRequest{ClaimId: claimId}
 
 		log.Printf("Creating SetPaymentPending Request; claimId: %v", claimId)
 
-		client := p.NewClaimServiceClient(conn)
+		client := c.NewClaimServiceClient(conn)
 		_, err = client.SetPaymentPending(ctx, request)
 
 		if err != nil {
@@ -98,9 +98,9 @@ func AcknowledgeClaim(address string) Handler {
 
 		log.Printf("Creating AcknowledgeClaim Request; claimId: %v, profileId: %v", claimId, profileId)
 
-		client := p.NewClaimServiceClient(conn)
+		client := c.NewClaimServiceClient(conn)
 
-		request := &p.AcknowledgeClaimRequest{
+		request := &c.AcknowledgeClaimRequest{
 			ClaimId:   claimId,
 			ProfileId: profileId,
 		}

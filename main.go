@@ -14,7 +14,7 @@ import (
 func main() {
 	createClaimRequest := &cb.CreateClaimRequest{
 		Claim: &cb.Claim{
-			Email:                 "lanemets.vv+0lo@gmail.com",
+			Email:                 "lanemets.vv+x83j@gmail.com",
 			Amount:                "100.0",
 			CurrencyCode:          "USD",
 			Description:           "Test Claim To Create",
@@ -63,7 +63,7 @@ func main() {
 		},
 
 		handler.ServiceHandler{
-			Handler:  handler.NotifyBeneficiary(profileService),
+			Handler:  handler.NotifyBeneficiary(claimService),
 			Topic:    config.NotifyBeneficiaryTopicName,
 			WorkerId: "notify-beneficiary",
 		},
@@ -78,12 +78,12 @@ func main() {
 			WorkerId: "get-claim",
 		},
 		handler.ServiceHandler{
-			Handler:  handler.AcknowledgeClaim(profileService),
+			Handler:  handler.AcknowledgeClaim(claimService),
 			Topic:    config.AcknowledgeClaimTopicName,
 			WorkerId: "acknowledge-claim",
 		},
 		handler.ServiceHandler{
-			Handler:  handler.SetPaymentPending(profileService),
+			Handler:  handler.SetPaymentPending(claimService),
 			Topic:    config.SetPaymentPendingTopicName,
 			WorkerId: "set-payment-pending",
 		},

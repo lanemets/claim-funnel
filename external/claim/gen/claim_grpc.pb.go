@@ -19,6 +19,10 @@ const _ = grpc.SupportPackageIsVersion7
 type ClaimServiceClient interface {
 	CreateClaim(ctx context.Context, in *CreateClaimRequest, opts ...grpc.CallOption) (*CreateClaimResponse, error)
 	GetClaim(ctx context.Context, in *GetClaimRequest, opts ...grpc.CallOption) (*GetClaimResponse, error)
+	NotifyBeneficiary(ctx context.Context, in *NotifyBeneficiaryRequest, opts ...grpc.CallOption) (*NotifyBeneficiaryResponse, error)
+	ConfirmClaim(ctx context.Context, in *ConfirmClaimRequest, opts ...grpc.CallOption) (*ConfirmClaimResponse, error)
+	SetPaymentPending(ctx context.Context, in *SetPaymentPendingRequest, opts ...grpc.CallOption) (*SetPaymentPendingResponse, error)
+	AcknowledgeClaim(ctx context.Context, in *AcknowledgeClaimRequest, opts ...grpc.CallOption) (*AcknowledgeClaimResponse, error)
 }
 
 type claimServiceClient struct {
@@ -47,12 +51,52 @@ func (c *claimServiceClient) GetClaim(ctx context.Context, in *GetClaimRequest, 
 	return out, nil
 }
 
+func (c *claimServiceClient) NotifyBeneficiary(ctx context.Context, in *NotifyBeneficiaryRequest, opts ...grpc.CallOption) (*NotifyBeneficiaryResponse, error) {
+	out := new(NotifyBeneficiaryResponse)
+	err := c.cc.Invoke(ctx, "/claim.ClaimService/NotifyBeneficiary", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *claimServiceClient) ConfirmClaim(ctx context.Context, in *ConfirmClaimRequest, opts ...grpc.CallOption) (*ConfirmClaimResponse, error) {
+	out := new(ConfirmClaimResponse)
+	err := c.cc.Invoke(ctx, "/claim.ClaimService/ConfirmClaim", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *claimServiceClient) SetPaymentPending(ctx context.Context, in *SetPaymentPendingRequest, opts ...grpc.CallOption) (*SetPaymentPendingResponse, error) {
+	out := new(SetPaymentPendingResponse)
+	err := c.cc.Invoke(ctx, "/claim.ClaimService/SetPaymentPending", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *claimServiceClient) AcknowledgeClaim(ctx context.Context, in *AcknowledgeClaimRequest, opts ...grpc.CallOption) (*AcknowledgeClaimResponse, error) {
+	out := new(AcknowledgeClaimResponse)
+	err := c.cc.Invoke(ctx, "/claim.ClaimService/AcknowledgeClaim", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ClaimServiceServer is the server API for ClaimService service.
 // All implementations must embed UnimplementedClaimServiceServer
 // for forward compatibility
 type ClaimServiceServer interface {
 	CreateClaim(context.Context, *CreateClaimRequest) (*CreateClaimResponse, error)
 	GetClaim(context.Context, *GetClaimRequest) (*GetClaimResponse, error)
+	NotifyBeneficiary(context.Context, *NotifyBeneficiaryRequest) (*NotifyBeneficiaryResponse, error)
+	ConfirmClaim(context.Context, *ConfirmClaimRequest) (*ConfirmClaimResponse, error)
+	SetPaymentPending(context.Context, *SetPaymentPendingRequest) (*SetPaymentPendingResponse, error)
+	AcknowledgeClaim(context.Context, *AcknowledgeClaimRequest) (*AcknowledgeClaimResponse, error)
 	mustEmbedUnimplementedClaimServiceServer()
 }
 
@@ -65,6 +109,18 @@ func (UnimplementedClaimServiceServer) CreateClaim(context.Context, *CreateClaim
 }
 func (UnimplementedClaimServiceServer) GetClaim(context.Context, *GetClaimRequest) (*GetClaimResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClaim not implemented")
+}
+func (UnimplementedClaimServiceServer) NotifyBeneficiary(context.Context, *NotifyBeneficiaryRequest) (*NotifyBeneficiaryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NotifyBeneficiary not implemented")
+}
+func (UnimplementedClaimServiceServer) ConfirmClaim(context.Context, *ConfirmClaimRequest) (*ConfirmClaimResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmClaim not implemented")
+}
+func (UnimplementedClaimServiceServer) SetPaymentPending(context.Context, *SetPaymentPendingRequest) (*SetPaymentPendingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetPaymentPending not implemented")
+}
+func (UnimplementedClaimServiceServer) AcknowledgeClaim(context.Context, *AcknowledgeClaimRequest) (*AcknowledgeClaimResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AcknowledgeClaim not implemented")
 }
 func (UnimplementedClaimServiceServer) mustEmbedUnimplementedClaimServiceServer() {}
 
@@ -115,6 +171,78 @@ func _ClaimService_GetClaim_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ClaimService_NotifyBeneficiary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyBeneficiaryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClaimServiceServer).NotifyBeneficiary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/claim.ClaimService/NotifyBeneficiary",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClaimServiceServer).NotifyBeneficiary(ctx, req.(*NotifyBeneficiaryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClaimService_ConfirmClaim_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmClaimRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClaimServiceServer).ConfirmClaim(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/claim.ClaimService/ConfirmClaim",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClaimServiceServer).ConfirmClaim(ctx, req.(*ConfirmClaimRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClaimService_SetPaymentPending_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetPaymentPendingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClaimServiceServer).SetPaymentPending(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/claim.ClaimService/SetPaymentPending",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClaimServiceServer).SetPaymentPending(ctx, req.(*SetPaymentPendingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClaimService_AcknowledgeClaim_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AcknowledgeClaimRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClaimServiceServer).AcknowledgeClaim(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/claim.ClaimService/AcknowledgeClaim",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClaimServiceServer).AcknowledgeClaim(ctx, req.(*AcknowledgeClaimRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _ClaimService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "claim.ClaimService",
 	HandlerType: (*ClaimServiceServer)(nil),
@@ -126,6 +254,22 @@ var _ClaimService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetClaim",
 			Handler:    _ClaimService_GetClaim_Handler,
+		},
+		{
+			MethodName: "NotifyBeneficiary",
+			Handler:    _ClaimService_NotifyBeneficiary_Handler,
+		},
+		{
+			MethodName: "ConfirmClaim",
+			Handler:    _ClaimService_ConfirmClaim_Handler,
+		},
+		{
+			MethodName: "SetPaymentPending",
+			Handler:    _ClaimService_SetPaymentPending_Handler,
+		},
+		{
+			MethodName: "AcknowledgeClaim",
+			Handler:    _ClaimService_AcknowledgeClaim_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

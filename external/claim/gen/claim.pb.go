@@ -1101,6 +1101,363 @@ func (x *ClaimInfo) GetStatus() Claim_StatusType {
 	return Claim_UNKNOWN
 }
 
+type NotifyBeneficiaryRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClaimId string `protobuf:"bytes,1,opt,name=claimId,proto3" json:"claimId,omitempty"`
+	//TODO: get rid of this
+	ExistingUser bool `protobuf:"varint,2,opt,name=existingUser,proto3" json:"existingUser,omitempty"`
+}
+
+func (x *NotifyBeneficiaryRequest) Reset() {
+	*x = NotifyBeneficiaryRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NotifyBeneficiaryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyBeneficiaryRequest) ProtoMessage() {}
+
+func (x *NotifyBeneficiaryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyBeneficiaryRequest.ProtoReflect.Descriptor instead.
+func (*NotifyBeneficiaryRequest) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *NotifyBeneficiaryRequest) GetClaimId() string {
+	if x != nil {
+		return x.ClaimId
+	}
+	return ""
+}
+
+func (x *NotifyBeneficiaryRequest) GetExistingUser() bool {
+	if x != nil {
+		return x.ExistingUser
+	}
+	return false
+}
+
+type NotifyBeneficiaryResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *NotifyBeneficiaryResponse) Reset() {
+	*x = NotifyBeneficiaryResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NotifyBeneficiaryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyBeneficiaryResponse) ProtoMessage() {}
+
+func (x *NotifyBeneficiaryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyBeneficiaryResponse.ProtoReflect.Descriptor instead.
+func (*NotifyBeneficiaryResponse) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{12}
+}
+
+type ConfirmClaimRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClaimId string `protobuf:"bytes,1,opt,name=claimId,proto3" json:"claimId,omitempty"`
+}
+
+func (x *ConfirmClaimRequest) Reset() {
+	*x = ConfirmClaimRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConfirmClaimRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfirmClaimRequest) ProtoMessage() {}
+
+func (x *ConfirmClaimRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfirmClaimRequest.ProtoReflect.Descriptor instead.
+func (*ConfirmClaimRequest) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ConfirmClaimRequest) GetClaimId() string {
+	if x != nil {
+		return x.ClaimId
+	}
+	return ""
+}
+
+type ConfirmClaimResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ConfirmClaimResponse) Reset() {
+	*x = ConfirmClaimResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConfirmClaimResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfirmClaimResponse) ProtoMessage() {}
+
+func (x *ConfirmClaimResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfirmClaimResponse.ProtoReflect.Descriptor instead.
+func (*ConfirmClaimResponse) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{14}
+}
+
+type AcknowledgeClaimRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClaimId   string `protobuf:"bytes,1,opt,name=claimId,proto3" json:"claimId,omitempty"`
+	ProfileId string `protobuf:"bytes,2,opt,name=profileId,proto3" json:"profileId,omitempty"`
+}
+
+func (x *AcknowledgeClaimRequest) Reset() {
+	*x = AcknowledgeClaimRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AcknowledgeClaimRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AcknowledgeClaimRequest) ProtoMessage() {}
+
+func (x *AcknowledgeClaimRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AcknowledgeClaimRequest.ProtoReflect.Descriptor instead.
+func (*AcknowledgeClaimRequest) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *AcknowledgeClaimRequest) GetClaimId() string {
+	if x != nil {
+		return x.ClaimId
+	}
+	return ""
+}
+
+func (x *AcknowledgeClaimRequest) GetProfileId() string {
+	if x != nil {
+		return x.ProfileId
+	}
+	return ""
+}
+
+type AcknowledgeClaimResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *AcknowledgeClaimResponse) Reset() {
+	*x = AcknowledgeClaimResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AcknowledgeClaimResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AcknowledgeClaimResponse) ProtoMessage() {}
+
+func (x *AcknowledgeClaimResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AcknowledgeClaimResponse.ProtoReflect.Descriptor instead.
+func (*AcknowledgeClaimResponse) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{16}
+}
+
+type SetPaymentPendingRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClaimId string `protobuf:"bytes,1,opt,name=claimId,proto3" json:"claimId,omitempty"`
+}
+
+func (x *SetPaymentPendingRequest) Reset() {
+	*x = SetPaymentPendingRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SetPaymentPendingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetPaymentPendingRequest) ProtoMessage() {}
+
+func (x *SetPaymentPendingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetPaymentPendingRequest.ProtoReflect.Descriptor instead.
+func (*SetPaymentPendingRequest) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *SetPaymentPendingRequest) GetClaimId() string {
+	if x != nil {
+		return x.ClaimId
+	}
+	return ""
+}
+
+type SetPaymentPendingResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *SetPaymentPendingResponse) Reset() {
+	*x = SetPaymentPendingResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_claim_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SetPaymentPendingResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetPaymentPendingResponse) ProtoMessage() {}
+
+func (x *SetPaymentPendingResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_claim_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetPaymentPendingResponse.ProtoReflect.Descriptor instead.
+func (*SetPaymentPendingResponse) Descriptor() ([]byte, []int) {
+	return file_claim_proto_rawDescGZIP(), []int{18}
+}
+
 var File_claim_proto protoreflect.FileDescriptor
 
 var file_claim_proto_rawDesc = []byte{
@@ -1233,19 +1590,65 @@ var file_claim_proto_rawDesc = []byte{
 	0x6d, 0x61, 0x69, 0x6c, 0x12, 0x2f, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x03,
 	0x20, 0x01, 0x28, 0x0e, 0x32, 0x17, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x43, 0x6c, 0x61,
 	0x69, 0x6d, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x54, 0x79, 0x70, 0x65, 0x52, 0x06, 0x73,
-	0x74, 0x61, 0x74, 0x75, 0x73, 0x32, 0x95, 0x01, 0x0a, 0x0c, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x53,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x46, 0x0a, 0x0b, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x43, 0x6c, 0x61, 0x69, 0x6d, 0x12, 0x19, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x43, 0x72,
-	0x65, 0x61, 0x74, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x1a, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43,
-	0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3d,
-	0x0a, 0x08, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x12, 0x16, 0x2e, 0x63, 0x6c, 0x61,
-	0x69, 0x6d, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x17, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6c,
-	0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x28, 0x5a,
-	0x26, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6c, 0x61, 0x6e, 0x65,
-	0x6d, 0x65, 0x74, 0x73, 0x2f, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2d, 0x66, 0x75, 0x6e, 0x6e, 0x65,
-	0x6c, 0x2f, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x58, 0x0a, 0x18, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x42,
+	0x65, 0x6e, 0x65, 0x66, 0x69, 0x63, 0x69, 0x61, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x12, 0x22, 0x0a, 0x0c, 0x65,
+	0x78, 0x69, 0x73, 0x74, 0x69, 0x6e, 0x67, 0x55, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x08, 0x52, 0x0c, 0x65, 0x78, 0x69, 0x73, 0x74, 0x69, 0x6e, 0x67, 0x55, 0x73, 0x65, 0x72, 0x22,
+	0x1b, 0x0a, 0x19, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x42, 0x65, 0x6e, 0x65, 0x66, 0x69, 0x63,
+	0x69, 0x61, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2f, 0x0a, 0x13,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x22, 0x16, 0x0a,
+	0x14, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x51, 0x0a, 0x17, 0x41, 0x63, 0x6b, 0x6e, 0x6f, 0x77, 0x6c,
+	0x65, 0x64, 0x67, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x18, 0x0a, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x70, 0x72,
+	0x6f, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x70,
+	0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x1a, 0x0a, 0x18, 0x41, 0x63, 0x6b, 0x6e,
+	0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x34, 0x0a, 0x18, 0x53, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65,
+	0x6e, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x18, 0x0a, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x49, 0x64, 0x22, 0x1b, 0x0a, 0x19, 0x53, 0x65,
+	0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x6e, 0x67, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xeb, 0x03, 0x0a, 0x0c, 0x43, 0x6c, 0x61, 0x69,
+	0x6d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x46, 0x0a, 0x0b, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x12, 0x19, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e,
+	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
+	0x12, 0x3d, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x12, 0x16, 0x2e, 0x63,
+	0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x47, 0x65, 0x74,
+	0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
+	0x58, 0x0a, 0x11, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x42, 0x65, 0x6e, 0x65, 0x66, 0x69, 0x63,
+	0x69, 0x61, 0x72, 0x79, 0x12, 0x1f, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x4e, 0x6f, 0x74,
+	0x69, 0x66, 0x79, 0x42, 0x65, 0x6e, 0x65, 0x66, 0x69, 0x63, 0x69, 0x61, 0x72, 0x79, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x4e, 0x6f,
+	0x74, 0x69, 0x66, 0x79, 0x42, 0x65, 0x6e, 0x65, 0x66, 0x69, 0x63, 0x69, 0x61, 0x72, 0x79, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x49, 0x0a, 0x0c, 0x43, 0x6f, 0x6e,
+	0x66, 0x69, 0x72, 0x6d, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x12, 0x1a, 0x2e, 0x63, 0x6c, 0x61, 0x69,
+	0x6d, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x43, 0x6f,
+	0x6e, 0x66, 0x69, 0x72, 0x6d, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x58, 0x0a, 0x11, 0x53, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65,
+	0x6e, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x6e, 0x67, 0x12, 0x1f, 0x2e, 0x63, 0x6c, 0x61, 0x69,
+	0x6d, 0x2e, 0x53, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x65, 0x6e, 0x64,
+	0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x63, 0x6c, 0x61,
+	0x69, 0x6d, 0x2e, 0x53, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x65, 0x6e,
+	0x64, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x55,
+	0x0a, 0x10, 0x41, 0x63, 0x6b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x43, 0x6c, 0x61,
+	0x69, 0x6d, 0x12, 0x1e, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x41, 0x63, 0x6b, 0x6e, 0x6f,
+	0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x41, 0x63, 0x6b, 0x6e, 0x6f,
+	0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x28, 0x5a, 0x26, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2f, 0x6c, 0x61, 0x6e, 0x65, 0x6d, 0x65, 0x74, 0x73, 0x2f, 0x63, 0x6c, 0x61,
+	0x69, 0x6d, 0x2d, 0x66, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x2f, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1261,24 +1664,32 @@ func file_claim_proto_rawDescGZIP() []byte {
 }
 
 var file_claim_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_claim_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_claim_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_claim_proto_goTypes = []interface{}{
-	(Claim_StatusType)(0),       // 0: claim.Claim.StatusType
-	(Address_AddressType)(0),    // 1: claim.Address.AddressType
-	(Company_CompanyType)(0),    // 2: claim.Company.CompanyType
-	(Phone_PhoneType)(0),        // 3: claim.Phone.PhoneType
-	(Profile_ProfileType)(0),    // 4: claim.Profile.ProfileType
-	(*Claim)(nil),               // 5: claim.Claim
-	(*CreateClaimRequest)(nil),  // 6: claim.CreateClaimRequest
-	(*CreateClaimResponse)(nil), // 7: claim.CreateClaimResponse
-	(*Address)(nil),             // 8: claim.Address
-	(*Company)(nil),             // 9: claim.Company
-	(*Person)(nil),              // 10: claim.Person
-	(*Phone)(nil),               // 11: claim.Phone
-	(*Profile)(nil),             // 12: claim.Profile
-	(*GetClaimRequest)(nil),     // 13: claim.GetClaimRequest
-	(*GetClaimResponse)(nil),    // 14: claim.GetClaimResponse
-	(*ClaimInfo)(nil),           // 15: claim.ClaimInfo
+	(Claim_StatusType)(0),             // 0: claim.Claim.StatusType
+	(Address_AddressType)(0),          // 1: claim.Address.AddressType
+	(Company_CompanyType)(0),          // 2: claim.Company.CompanyType
+	(Phone_PhoneType)(0),              // 3: claim.Phone.PhoneType
+	(Profile_ProfileType)(0),          // 4: claim.Profile.ProfileType
+	(*Claim)(nil),                     // 5: claim.Claim
+	(*CreateClaimRequest)(nil),        // 6: claim.CreateClaimRequest
+	(*CreateClaimResponse)(nil),       // 7: claim.CreateClaimResponse
+	(*Address)(nil),                   // 8: claim.Address
+	(*Company)(nil),                   // 9: claim.Company
+	(*Person)(nil),                    // 10: claim.Person
+	(*Phone)(nil),                     // 11: claim.Phone
+	(*Profile)(nil),                   // 12: claim.Profile
+	(*GetClaimRequest)(nil),           // 13: claim.GetClaimRequest
+	(*GetClaimResponse)(nil),          // 14: claim.GetClaimResponse
+	(*ClaimInfo)(nil),                 // 15: claim.ClaimInfo
+	(*NotifyBeneficiaryRequest)(nil),  // 16: claim.NotifyBeneficiaryRequest
+	(*NotifyBeneficiaryResponse)(nil), // 17: claim.NotifyBeneficiaryResponse
+	(*ConfirmClaimRequest)(nil),       // 18: claim.ConfirmClaimRequest
+	(*ConfirmClaimResponse)(nil),      // 19: claim.ConfirmClaimResponse
+	(*AcknowledgeClaimRequest)(nil),   // 20: claim.AcknowledgeClaimRequest
+	(*AcknowledgeClaimResponse)(nil),  // 21: claim.AcknowledgeClaimResponse
+	(*SetPaymentPendingRequest)(nil),  // 22: claim.SetPaymentPendingRequest
+	(*SetPaymentPendingResponse)(nil), // 23: claim.SetPaymentPendingResponse
 }
 var file_claim_proto_depIdxs = []int32{
 	0,  // 0: claim.Claim.status:type_name -> claim.Claim.StatusType
@@ -1296,10 +1707,18 @@ var file_claim_proto_depIdxs = []int32{
 	0,  // 12: claim.ClaimInfo.status:type_name -> claim.Claim.StatusType
 	6,  // 13: claim.ClaimService.CreateClaim:input_type -> claim.CreateClaimRequest
 	13, // 14: claim.ClaimService.GetClaim:input_type -> claim.GetClaimRequest
-	7,  // 15: claim.ClaimService.CreateClaim:output_type -> claim.CreateClaimResponse
-	14, // 16: claim.ClaimService.GetClaim:output_type -> claim.GetClaimResponse
-	15, // [15:17] is the sub-list for method output_type
-	13, // [13:15] is the sub-list for method input_type
+	16, // 15: claim.ClaimService.NotifyBeneficiary:input_type -> claim.NotifyBeneficiaryRequest
+	18, // 16: claim.ClaimService.ConfirmClaim:input_type -> claim.ConfirmClaimRequest
+	22, // 17: claim.ClaimService.SetPaymentPending:input_type -> claim.SetPaymentPendingRequest
+	20, // 18: claim.ClaimService.AcknowledgeClaim:input_type -> claim.AcknowledgeClaimRequest
+	7,  // 19: claim.ClaimService.CreateClaim:output_type -> claim.CreateClaimResponse
+	14, // 20: claim.ClaimService.GetClaim:output_type -> claim.GetClaimResponse
+	17, // 21: claim.ClaimService.NotifyBeneficiary:output_type -> claim.NotifyBeneficiaryResponse
+	19, // 22: claim.ClaimService.ConfirmClaim:output_type -> claim.ConfirmClaimResponse
+	23, // 23: claim.ClaimService.SetPaymentPending:output_type -> claim.SetPaymentPendingResponse
+	21, // 24: claim.ClaimService.AcknowledgeClaim:output_type -> claim.AcknowledgeClaimResponse
+	19, // [19:25] is the sub-list for method output_type
+	13, // [13:19] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name
 	13, // [13:13] is the sub-list for extension extendee
 	0,  // [0:13] is the sub-list for field type_name
@@ -1443,6 +1862,102 @@ func file_claim_proto_init() {
 				return nil
 			}
 		}
+		file_claim_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NotifyBeneficiaryRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NotifyBeneficiaryResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConfirmClaimRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConfirmClaimResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AcknowledgeClaimRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AcknowledgeClaimResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SetPaymentPendingRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_claim_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SetPaymentPendingResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_claim_proto_msgTypes[7].OneofWrappers = []interface{}{
 		(*Profile_Person)(nil),
@@ -1454,7 +1969,7 @@ func file_claim_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_claim_proto_rawDesc,
 			NumEnums:      5,
-			NumMessages:   11,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
