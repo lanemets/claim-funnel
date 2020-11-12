@@ -1,8 +1,8 @@
-package config
+package bpm
 
 import "time"
 
-type Worker struct {
+type WorkerConfig struct {
 	Retries            int
 	RetryTimeoutMillis int
 

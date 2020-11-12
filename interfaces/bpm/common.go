@@ -1,26 +1,24 @@
-package config
+package bpm
 
-type BpmCredentials struct {
+type Credentials struct {
 	EndpointUrl string
 	User        string
 	Password    string
 }
 
-type BpmClient struct {
-	Credentials *BpmCredentials
-}
-
-type BpmProcess struct {
+type Process struct {
 	FilePath string
 }
 
 const (
-	ClaimProcessKey            = "claim-process"
-	ClaimConfirmTopicName      = "claim-confirm"
+	ClaimProcessKey       = "claim-process"
+	ClaimConfirmTopicName = "claim-confirm"
 
 	AcknowledgeClaimTopicName  = "acknowledge-claim"
 	SetPaymentPendingTopicName = "set-payment-pending"
 	GetClaimTopicName          = "get-current-claim"
 	NotifyBeneficiaryTopicName = "notify-beneficiary"
 	GetProfileByEmailTopicName = "get-profile-by-email"
+
+	ClaimConfirmTaskId = "claim-confirm"
 )

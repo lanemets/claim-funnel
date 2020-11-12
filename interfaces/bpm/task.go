@@ -1,44 +1,32 @@
-package handler
+package bpm
 
 import (
-	"context"
 	"fmt"
 	c "github.com/lanemets/claim-funnel/external/claim/gen"
 	p "github.com/lanemets/claim-funnel/external/profile/gen"
-	"google.golang.org/grpc"
+	"github.com/lanemets/claim-funnel/interfaces/benerpc"
 	"log"
-	"time"
 )
 
 type Handler = func(variables map[string]string, businessKey string) (attributes map[string]interface{}, error error)
 
-type ServiceHandler struct {
+type ServiceTaskHandler struct {
 	Handler  Handler
 	Topic    string
 	WorkerId string
 }
 
-//TODO: get rid of address
-func NotifyBeneficiary(address string) Handler {
+func NotifyBeneficiary(grpcCtx *benerpc.GrpcContext) Handler {
 	return func(variables map[string]string, businessKey string) (map[string]interface{}, error) {
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
-
 		claimId := businessKey
 		profileId, exists := variables["profileId"]
 
 		log.Printf("Notifying Beneficiary; claimId: %v, profileId: %v", claimId, profileId)
 
-		client := c.NewClaimServiceClient(conn)
+		client := c.NewClaimServiceClient(grpcCtx.Connection())
 		req := &c.NotifyBeneficiaryRequest{ClaimId: claimId, ExistingUser: exists}
 
-		_, err = client.NotifyBeneficiary(ctx, req)
+		_, err := client.NotifyBeneficiary(grpcCtx.Context(), req)
 
 		if err != nil {
 			log.Fatalf("an error occured on notifying beneficiary: %v", err)
@@ -50,24 +38,16 @@ func NotifyBeneficiary(address string) Handler {
 	}
 }
 
-func SetPaymentPending(address string) Handler {
+func SetPaymentPending(grpcCtx *benerpc.GrpcContext) Handler {
 	return func(variables map[string]string, businessKey string) (map[string]interface{}, error) {
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
 
 		claimId := businessKey
 		request := &c.SetPaymentPendingRequest{ClaimId: claimId}
 
 		log.Printf("Creating SetPaymentPending Request; claimId: %v", claimId)
 
-		client := c.NewClaimServiceClient(conn)
-		_, err = client.SetPaymentPending(ctx, request)
+		client := c.NewClaimServiceClient(grpcCtx.Connection())
+		_, err := client.SetPaymentPending(grpcCtx.Context(), request)
 
 		if err != nil {
 			log.Fatalf("an error occured on SetPaymentPending request %v", err)
@@ -82,30 +62,22 @@ func SetPaymentPending(address string) Handler {
 	}
 }
 
-func AcknowledgeClaim(address string) Handler {
+func AcknowledgeClaim(grpcCtx *benerpc.GrpcContext) Handler {
 	return func(variables map[string]string, businessKey string) (map[string]interface{}, error) {
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
 
 		claimId := businessKey
 		profileId := variables["profileId"]
 
 		log.Printf("Creating AcknowledgeClaim Request; claimId: %v, profileId: %v", claimId, profileId)
 
-		client := c.NewClaimServiceClient(conn)
+		client := c.NewClaimServiceClient(grpcCtx.Connection())
 
 		request := &c.AcknowledgeClaimRequest{
 			ClaimId:   claimId,
 			ProfileId: profileId,
 		}
 
-		_, err = client.AcknowledgeClaim(ctx, request)
+		_, err := client.AcknowledgeClaim(grpcCtx.Context(), request)
 
 		if err != nil {
 			log.Fatalf("an error occured on AcknowledgeClaim request: %v", err)
@@ -121,22 +93,13 @@ func AcknowledgeClaim(address string) Handler {
 	}
 }
 
-func GetClaimInfo(address string) Handler {
+func GetClaimInfo(grpcCtx *benerpc.GrpcContext) Handler {
 	return func(variables map[string]string, businessKey string) (map[string]interface{}, error) {
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
-
 		claimId := businessKey
-		client := c.NewClaimServiceClient(conn)
+		client := c.NewClaimServiceClient(grpcCtx.Connection())
 		req := &c.GetClaimRequest{Id: claimId}
 
-		claim, err := client.GetClaim(ctx, req)
+		claim, err := client.GetClaim(grpcCtx.Context(), req)
 		if err != nil {
 			log.Fatalf("an error occured on get claim info: %v", err)
 		}
@@ -150,24 +113,16 @@ func GetClaimInfo(address string) Handler {
 	}
 }
 
-func GetProfileByEmail(address string) Handler {
+func GetProfileByEmail(grpcCtx *benerpc.GrpcContext) Handler {
 	return func(variables map[string]string, businessKey string) (map[string]interface{}, error) {
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
 
 		email := variables["email"]
 		log.Printf("Creating GetProfileByEmail Request; email: %v", email)
 
-		client := p.NewProfilesServiceClient(conn)
+		client := p.NewProfilesServiceClient(grpcCtx.Connection())
 		req := &p.GetProfileByEmailRequest{Email: email}
 
-		profile, err := client.GetProfileByEmail(ctx, req)
+		profile, err := client.GetProfileByEmail(grpcCtx.Context(), req)
 		if err != nil {
 			log.Fatalf("an error occured on GetProfileByEmail request: %v", err)
 		}
