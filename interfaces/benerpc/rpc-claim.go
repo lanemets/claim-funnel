@@ -49,17 +49,20 @@ func (client ClaimClient) Create(claim *model.Claim, profile *model.Profile) (*m
 	return &model.ClaimId{Value: response.Id}, nil
 }
 
-func (client ClaimClient) ConfirmClaim(claimId model.ClaimId) {
+func (client ClaimClient) ConfirmClaim(claimId *model.ClaimId) error {
 	claimServiceClient := grpcClient.NewClaimServiceClient(client.ctx.Connection())
 
 	req := &grpcClient.ConfirmClaimRequest{ClaimId: claimId.Value}
 	_, err := claimServiceClient.ConfirmClaim(client.ctx.Context(), req)
 
 	if err != nil {
-		log.Fatalf("an error occured on confirming claim: %v", err)
+		errMsg := fmt.Sprintf("an error has occured on confirming claim: %v", err)
+		log.Println(errMsg)
+		return errors.New(errMsg)
 	}
 
 	log.Printf("claim has been confirmed successfully; claimId: %v", claimId)
+	return nil
 }
 
 func NewRpcClaim(grpcContext *GrpcContext) usecases.RpcClaim {

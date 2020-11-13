@@ -5,7 +5,7 @@ import (
 	"fmt"
 	camunda "github.com/citilinkru/camunda-client-go"
 	"github.com/citilinkru/camunda-client-go/processor"
-	"github.com/lanemets/claim-funnel/usecases"
+	"github.com/lanemets/claim-funnel/model"
 	"log"
 	"os"
 )
@@ -55,7 +55,7 @@ func (c Camunda) DeployProcess(path string) error {
 	return nil
 }
 
-func (c Camunda) StartProcessInstance(processKey string, businessKey string) (*usecases.ProcessDefinitionId, error) {
+func (c Camunda) StartProcessInstance(processKey string, businessKey string) (*model.ProcessDefinitionId, error) {
 	result, err := c.client.ProcessDefinition.StartInstance(
 		camunda.QueryProcessDefinitionBy{Key: &processKey},
 		camunda.ReqStartInstance{
@@ -76,10 +76,10 @@ func (c Camunda) StartProcessInstance(processKey string, businessKey string) (*u
 		result.BusinessKey,
 	)
 
-	return &usecases.ProcessDefinitionId{Value: result.DefinitionId}, nil
+	return &model.ProcessDefinitionId{Value: result.DefinitionId}, nil
 }
 
-func (c Camunda) CompleteUserTask(businessKey string, taskId string, processDefinitionId *usecases.ProcessDefinitionId) error {
+func (c Camunda) CompleteUserTask(businessKey string, taskId string, processDefinitionId *model.ProcessDefinitionId) error {
 	//TODO: check for multiple process instances
 	//TODO: retrieve task by query by id
 	query := &camunda.UserTaskGetListQuery{

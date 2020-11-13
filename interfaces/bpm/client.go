@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/lanemets/claim-funnel/model"
-	"github.com/lanemets/claim-funnel/usecases"
 	"log"
 	"path/filepath"
 )
@@ -12,8 +11,8 @@ import (
 type BpmClient interface {
 	RegisterExternalTaskWorker(workerConfig *WorkerConfig, handler ServiceTaskHandler) error
 	DeployProcess(path string) error
-	StartProcessInstance(processKey string, businessKey string) (*usecases.ProcessDefinitionId, error)
-	CompleteUserTask(businessKey string, taskId string, processDefinitionId *usecases.ProcessDefinitionId) error
+	StartProcessInstance(processKey string, businessKey string) (*model.ProcessDefinitionId, error)
+	CompleteUserTask(businessKey string, taskId string, processDefinitionId *model.ProcessDefinitionId) error
 }
 
 type BpmClaimClient struct {
@@ -38,7 +37,7 @@ func (client BpmClaimClient) DeployProcess(processConfig *Process) {
 	}
 }
 
-func (client BpmClaimClient) StartProcessInstance(claimId *model.ClaimId) (*usecases.ProcessDefinitionId, error) {
+func (client BpmClaimClient) StartProcessInstance(claimId *model.ClaimId) (*model.ProcessDefinitionId, error) {
 	processDefinitionId, err := client.client.StartProcessInstance(ClaimProcessKey, claimId.Value)
 	if err != nil {
 		errMsg := fmt.Sprintf("unable to start claim process instance; claimId: %s, error: %s", claimId.Value, err)
@@ -63,7 +62,7 @@ func (client BpmClaimClient) RegisterServiceHandlers(workerConfig *WorkerConfig,
 
 func (client BpmClaimClient) CompleteClaimConfirmTask(
 	claimId *model.ClaimId,
-	processDefinitionId *usecases.ProcessDefinitionId,
+	processDefinitionId *model.ProcessDefinitionId,
 ) {
 	err := client.client.CompleteUserTask(
 		claimId.Value,

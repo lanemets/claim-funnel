@@ -4,6 +4,10 @@ type ClaimId struct {
 	Value string
 }
 
+type ProcessDefinitionId struct {
+	Value string
+}
+
 type CreateClaimRequest struct {
 	Claim   *Claim
 	Profile *Profile

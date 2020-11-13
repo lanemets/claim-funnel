@@ -127,7 +127,7 @@ func (*ClaimServer) Start() {
 		POST(
 			"/v1/claims",
 			func(c *gin.Context) {
-				_, _ = interactor.CreateClaim(
+				_, _, _ = interactor.CreateClaim(
 					&model.Claim{},
 					&model.Profile{},
 				)
