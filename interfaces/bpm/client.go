@@ -25,6 +25,7 @@ func NewBpmClaimClient(client BpmClient) BpmClaimClient {
 	}
 }
 
+//TODO: deploy if changed only
 func (client BpmClaimClient) DeployProcess(processConfig *Process) {
 	absPath, pathErr := filepath.Abs(processConfig.FilePath)
 	if pathErr != nil {

@@ -1,7 +1,6 @@
 package benerest
 
 import (
-	"errors"
 	"fmt"
 	camunda "github.com/citilinkru/camunda-client-go"
 	"github.com/gin-gonic/gin"
@@ -9,9 +8,7 @@ import (
 	"github.com/lanemets/claim-funnel/interfaces/bpm"
 	"github.com/lanemets/claim-funnel/model"
 	"github.com/lanemets/claim-funnel/usecases"
-	"github.com/stroiman/go-automapper"
 	"log"
-	"net/http"
 	"time"
 )
 
@@ -23,6 +20,7 @@ type Config struct {
 }
 
 type ClaimServer struct {
+	//TODO: use config
 	config     *Config
 	interactor *Interactor
 }
@@ -32,10 +30,8 @@ type Interactor interface {
 	ConfirmClaim(claimId *model.ClaimId) error
 }
 
-func NewServer(config *Config) Server {
-	return &ClaimServer{
-		config: config,
-	}
+func NewServer() Server {
+	return &ClaimServer{}
 }
 
 func (*ClaimServer) Start() {
@@ -72,6 +68,13 @@ func (*ClaimServer) Start() {
 				},
 			),
 		),
+	)
+
+	//TODO: do not deploy process if the same exists
+	bpmClient.DeployProcess(
+		&bpm.Process{
+			FilePath: "interfaces/bpm/resources/claim-process.bpmn",
+		},
 	)
 
 	registerError := bpmClient.RegisterServiceHandlers(
@@ -130,48 +133,13 @@ func (*ClaimServer) Start() {
 			}).
 		POST(
 			"/v1/claims",
-			func(c *gin.Context) {
-
-				var request CreateClaimRequest
-				err := c.ShouldBindJSON(&request)
-
-				if err != nil {
-					errMsg := fmt.Sprintf("an error has occurred on parsing request; err: %v", err)
-					log.Println(errMsg)
-
-					c.JSON(http.StatusBadRequest, gin.H{"error": errors.New(errMsg)})
-				}
-
-				log.Printf("request: %v", request)
-
-				var claim = &model.Claim{}
-				automapper.Map(request.Claim, claim)
-
-				log.Printf("claim: %v", claim)
-
-				var profile = &model.Profile{}
-				automapper.Map(request.Profile, profile)
-
-				log.Printf("profile: %v", profile)
-
-				claimId, processId, err := interactor.CreateClaim(claim, profile)
-				if err != nil {
-					errMsg := fmt.Sprintf("error on claim creation; err: %v", err)
-					log.Println(errMsg)
-
-					c.JSON(http.StatusInternalServerError, gin.H{"error": errors.New(errMsg)})
-				}
-				log.Printf("process started: %v", processId)
-				//TODO keep track of processes started ex: database
-
-				c.JSON(200, claimId)
-			}).
+			CreateClaim(interactor),
+		).
 		POST(
 			"/v1/claims/:claimId/confirm",
 			func(c *gin.Context) {
 				c.Param("claimId")
-
-				//confirm claim
+				//confirm claim here
 			})
 
 	_ = engine.Run(":8090")

@@ -1,6 +1,7 @@
 package bpm
 
 import (
+	"errors"
 	"fmt"
 	c "github.com/lanemets/claim-funnel/external/claim/gen"
 	p "github.com/lanemets/claim-funnel/external/profile/gen"
@@ -35,7 +36,10 @@ func NotifyBeneficiary(grpcCtx *benerpc.GrpcContext) Handler {
 		_, err := client.NotifyBeneficiary(grpcCtx.Context(), req)
 
 		if err != nil {
-			log.Fatalf("an error occured on notifying beneficiary: %v", err)
+			errMsg := fmt.Sprintf("an error occured on notifying beneficiary: %v", err)
+			log.Println(errMsg)
+
+			return nil, errors.New(errMsg)
 		}
 
 		log.Printf("beneficiary has been successfully notified; claimId: %v", claimId)

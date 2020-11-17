@@ -3,7 +3,6 @@ package benerpc
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	grpcClient "github.com/lanemets/claim-funnel/external/claim/gen"
 	"github.com/lanemets/claim-funnel/model"
 	"github.com/lanemets/claim-funnel/usecases"
@@ -15,25 +14,32 @@ type ClaimClient struct {
 }
 
 func (client ClaimClient) Create(claim *model.Claim, profile *model.Profile) (*model.ClaimId, error) {
+	//request := &grpcClient.CreateClaimRequest{
+	//	Claim: &grpcClient.Claim{
+	//		Email:                 "lanemets.vv+xn3j@gmail.com",
+	//		Amount:                "100.0",
+	//		CurrencyCode:          "USD",
+	//		Description:           "Test Claim To Create",
+	//		ClientReferenceNumber: uuid.New().String(),
+	//	},
+	//	Profile: &grpcClient.Profile{
+	//		ExternalId:  "0",
+	//		ProfileType: 0,
+	//		Entity: &grpcClient.Profile_Person{
+	//			Person: &grpcClient.Person{
+	//				FirstName: "TestFirsdt0",
+	//				LastName:  "TestLastd0",
+	//			},
+	//		},
+	//	},
+	//}
+
 	request := &grpcClient.CreateClaimRequest{
-		Claim: &grpcClient.Claim{
-			Email:                 "lanemets.vv+xn3j@gmail.com",
-			Amount:                "100.0",
-			CurrencyCode:          "USD",
-			Description:           "Test Claim To Create",
-			ClientReferenceNumber: uuid.New().String(),
-		},
-		Profile: &grpcClient.Profile{
-			ExternalId:  "0",
-			ProfileType: 0,
-			Entity: &grpcClient.Profile_Person{
-				Person: &grpcClient.Person{
-					FirstName: "TestFirsdt0",
-					LastName:  "TestLastd0",
-				},
-			},
-		},
+		Claim:   fromClaimModel(claim),
+		Profile: fromProfileModel(profile),
 	}
+
+	log.Printf("request!: %v", request)
 
 	claimServiceClient := grpcClient.NewClaimServiceClient(client.ctx.Connection())
 

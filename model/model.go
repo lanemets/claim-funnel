@@ -52,6 +52,8 @@ type Claim struct {
 	Email        string
 	Amount       string
 	CurrencyCode string
-	Description  string
-	Status       string
+	//TODO: deprecated, should be clientId in new version of claim service
+	ClientReferenceNumber string
+	Description           string
+	Status                string
 }
