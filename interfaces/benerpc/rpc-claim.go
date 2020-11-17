@@ -56,7 +56,7 @@ func (client ClaimClient) ConfirmClaim(claimId *model.ClaimId) error {
 	_, err := claimServiceClient.ConfirmClaim(client.ctx.Context(), req)
 
 	if err != nil {
-		errMsg := fmt.Sprintf("an error has occured on confirming claim: %v", err)
+		errMsg := fmt.Sprintf("an error has occurred on confirming claim: %v", err)
 		log.Println(errMsg)
 		return errors.New(errMsg)
 	}

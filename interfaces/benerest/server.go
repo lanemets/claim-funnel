@@ -1,6 +1,7 @@
 package benerest
 
 import (
+	"errors"
 	"fmt"
 	camunda "github.com/citilinkru/camunda-client-go"
 	"github.com/gin-gonic/gin"
@@ -8,7 +9,9 @@ import (
 	"github.com/lanemets/claim-funnel/interfaces/bpm"
 	"github.com/lanemets/claim-funnel/model"
 	"github.com/lanemets/claim-funnel/usecases"
+	"github.com/stroiman/go-automapper"
 	"log"
+	"net/http"
 	"time"
 )
 
@@ -25,8 +28,8 @@ type ClaimServer struct {
 }
 
 type Interactor interface {
-	CreateClaim(claim *model.Claim, profile *model.Profile)
-	ConfirmClaim(claimId model.ClaimId)
+	CreateClaim(claim *model.Claim, profile *model.Profile) (*model.ClaimId, *model.ProcessDefinitionId, error)
+	ConfirmClaim(claimId *model.ClaimId) error
 }
 
 func NewServer(config *Config) Server {
@@ -51,6 +54,7 @@ func (*ClaimServer) Start() {
 	}
 	defer profileGrpcContext.Close()
 
+	//TODO: move to config
 	credentials := &bpm.Credentials{
 		EndpointUrl: "http://localhost:8080/engine-rest",
 		User:        "demo",
@@ -120,19 +124,54 @@ func (*ClaimServer) Start() {
 	engine := gin.Default()
 	engine.
 		GET(
-			"/ping",
+			"/health",
 			func(c *gin.Context) {
-				c.JSON(200, gin.H{"message": "pong"})
+				c.JSON(200, gin.H{"message": "healthy"})
 			}).
 		POST(
 			"/v1/claims",
 			func(c *gin.Context) {
-				_, _, _ = interactor.CreateClaim(
-					&model.Claim{},
-					&model.Profile{},
-				)
 
-				c.JSON(200, gin.H{"message": "pong"})
+				var request CreateClaimRequest
+				err := c.ShouldBindJSON(&request)
+
+				if err != nil {
+					errMsg := fmt.Sprintf("an error has occurred on parsing request; err: %v", err)
+					log.Println(errMsg)
+
+					c.JSON(http.StatusBadRequest, gin.H{"error": errors.New(errMsg)})
+				}
+
+				log.Printf("request: %v", request)
+
+				var claim = &model.Claim{}
+				automapper.Map(request.Claim, claim)
+
+				log.Printf("claim: %v", claim)
+
+				var profile = &model.Profile{}
+				automapper.Map(request.Profile, profile)
+
+				log.Printf("profile: %v", profile)
+
+				claimId, processId, err := interactor.CreateClaim(claim, profile)
+				if err != nil {
+					errMsg := fmt.Sprintf("error on claim creation; err: %v", err)
+					log.Println(errMsg)
+
+					c.JSON(http.StatusInternalServerError, gin.H{"error": errors.New(errMsg)})
+				}
+				log.Printf("process started: %v", processId)
+				//TODO keep track of processes started ex: database
+
+				c.JSON(200, claimId)
+			}).
+		POST(
+			"/v1/claims/:claimId/confirm",
+			func(c *gin.Context) {
+				c.Param("claimId")
+
+				//confirm claim
 			})
 
 	_ = engine.Run(":8090")

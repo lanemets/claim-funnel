@@ -8,27 +8,27 @@ type ProcessDefinitionId struct {
 	Value string
 }
 
-type CreateClaimRequest struct {
-	Claim   *Claim
-	Profile *Profile
+type Address struct {
+	AddressType string
+	Line1       string
+	Line2       string
+	City        string
+	State       string
+	PostalCode  string
+	CountryCode string
 }
 
-type Claim struct {
-	Email                 string
-	Amount                string
-	CurrencyCode          string
-	ClientReferenceNumber string
-	Description           string
-	CreatedOn             string
-	ExpiresOn             string
+type Company struct {
+	BusinessType string
+	Name         string
+	Tin          string
 }
 
-type Profile struct {
-	ExternalId    string
-	ProfileType   ProfileType
-	ProfileEntity ProfileEntity
-	Address       *Address
-	Phone         *Phone
+type Phone struct {
+	PhoneType   string
+	CountryCode string
+	Number      string
+	Ext         string
 }
 
 type Person struct {
@@ -39,77 +39,19 @@ type Person struct {
 	Ein        string
 }
 
-type ProfileEntity interface {
-	ProfileEntity()
+type Profile struct {
+	ExternalID  string
+	ProfileType string
+	Person      Person
+	Company     Company
+	Address     Address
+	Phone       Phone
 }
 
-func (*ProfilePerson) ProfileEntity() {}
-
-func (*ProfileCompany) ProfileEntity() {}
-
-type ProfilePerson struct {
-	Person *Person
-}
-
-type ProfileCompany struct {
-	Company *Company
-}
-
-type CompanyType int32
-
-const (
-	UNKNOWN         CompanyType = 0
-	CORPORATION     CompanyType = 1
-	PARTNERSHIP     CompanyType = 2
-	GOVERNMENT      CompanyType = 3
-	NONPROFIT       CompanyType = 4
-	PUBLIC_COMPANY  CompanyType = 5
-	PRIVATE_COMPANY CompanyType = 6
-)
-
-type Company struct {
-	Id           string
-	BusinessType CompanyType
-	Name         string
-	Tin          string
-}
-
-type ProfileType = int32
-
-const (
-	PERSON  ProfileType = 0
-	COMPANY ProfileType = 1
-)
-
-type AddressType = int32
-
-const (
-	RESIDENTIAL AddressType = 0
-	COMMERCIAL  AddressType = 1
-)
-
-type PhoneType int32
-
-const (
-	HOME  PhoneType = 0
-	CELL  PhoneType = 1
-	WORK  PhoneType = 2
-	OTHER PhoneType = 3
-)
-
-type Address struct {
-	AddressType AddressType
-	Line1       string
-	Line2       string
-	City        string
-	State       string
-	PostalCode  string
-	CountryCode string
-}
-
-type Phone struct {
-	PhoneType   PhoneType
-	CountryCode string
-	Number      string
-	Ext         string
+type Claim struct {
+	Email        string
+	Amount       string
+	CurrencyCode string
+	Description  string
+	Status       string
 }

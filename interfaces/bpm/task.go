@@ -8,7 +8,13 @@ import (
 	"log"
 )
 
-type Handler = func(variables map[string]string, businessKey string) (attributes map[string]interface{}, error error)
+type Handler = func(
+	variables map[string]string,
+	businessKey string,
+) (
+	variablesToAdd map[string]interface{},
+	error error,
+)
 
 type ServiceTaskHandler struct {
 	Handler  Handler
